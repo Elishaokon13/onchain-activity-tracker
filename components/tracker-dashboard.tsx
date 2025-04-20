@@ -32,18 +32,47 @@ function generateSampleData() {
   return sampleData
 }
 
+// Default empty data for initialization
+function getEmptyData() {
+  const emptyData: Record<string, number> = {}
+  const today = new Date()
+  
+  for (let i = 0; i < 365; i++) {
+    const date = new Date()
+    date.setDate(today.getDate() - i)
+    const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+    emptyData[dateStr] = 0
+  }
+  
+  return emptyData
+}
+
 export function TrackerDashboard() {
   const { walletAddress } = useWalletStore()
   const [selectedChain, setSelectedChain] = useState<Chain>("ethereum")
-  const [activityData, setActivityData] = useState<Record<string, number>>({})
+  const [activityData, setActivityData] = useState<Record<string, number>>(getEmptyData())
   const [totalScore, setTotalScore] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [usingSampleData, setUsingSampleData] = useState(false)
 
+  // Reset data when wallet is disconnected
+  useEffect(() => {
+    if (!walletAddress) {
+      setActivityData(getEmptyData())
+      setTotalScore(0)
+      setError(null)
+      setUsingSampleData(false)
+    }
+  }, [walletAddress])
+  
+  // Load data when wallet is connected or chain changes
   useEffect(() => {
     async function loadActivityData() {
-      if (!walletAddress) return
+      // Don't attempt to load data if no wallet is connected
+      if (!walletAddress) {
+        return
+      }
 
       setIsLoading(true)
       setError(null)

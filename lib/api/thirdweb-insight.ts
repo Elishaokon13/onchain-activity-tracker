@@ -34,9 +34,25 @@ function generateFallbackData(): Record<string, number> {
 }
 
 /**
+ * Check if the wallet address is valid
+ */
+function isValidAddress(address: string | null): boolean {
+  if (!address) return false;
+  
+  // Basic Ethereum address validation
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+/**
  * Fetches transaction count for each day in the last 365 days
  */
-export async function fetchTransactionCount(address: string, chainId: number): Promise<Record<string, number>> {
+export async function fetchTransactionCount(address: string | null, chainId: number): Promise<Record<string, number>> {
+  // Validate address
+  if (!isValidAddress(address)) {
+    console.error("Invalid wallet address:", address);
+    return generateEmptyData();
+  }
+  
   // Create a cache key
   const cacheKey = `${address}-${chainId}-txcount`
 
@@ -48,17 +64,6 @@ export async function fetchTransactionCount(address: string, chainId: number): P
   try {
     console.log(`Fetching transactions for wallet ${address} on chain ${chainId}`);
     
-    // Initialize empty activity data
-    const activityByDay: Record<string, number> = {};
-    
-    // Initialize all days with 0 count
-    for (let i = 0; i < 365; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      const dateStr = formatDateToYYYYMMDD(date);
-      activityByDay[dateStr] = 0;
-    }
-
     // Get chain information
     const chainInfo = Object.values(CHAIN_CONFIGS).find(chain => chain.id === chainId);
     
@@ -127,4 +132,21 @@ export async function fetchTransactionCount(address: string, chainId: number): P
     cache[cacheKey] = fallbackData;
     return fallbackData;
   }
+}
+
+/**
+ * Generate empty data (all days with zero activity)
+ */
+function generateEmptyData(): Record<string, number> {
+  const emptyData: Record<string, number> = {};
+  
+  // Initialize all days with 0 count
+  for (let i = 0; i < 365; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const dateStr = formatDateToYYYYMMDD(date);
+    emptyData[dateStr] = 0;
+  }
+  
+  return emptyData;
 } 

@@ -9,7 +9,9 @@ export function ThirdwebProvider({ children }: { children: ReactNode }) {
     <ThirdwebSDKProvider 
       activeChain="ethereum"
       supportedChains={[Ethereum, Optimism, Base, Arbitrum, Binance]}
-      clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || ""}>
+      clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || ""}
+      autoConnect={false}
+    >
       {children}
     </ThirdwebSDKProvider>
   )

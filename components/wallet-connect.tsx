@@ -6,13 +6,17 @@ import { useWalletStore } from "@/lib/stores/wallet-store"
 
 export function WalletConnect() {
   const address = useAddress()
-  const setWalletAddress = useWalletStore((state) => state.setWalletAddress)
+  const { setWalletAddress, clearWalletAddress } = useWalletStore()
 
   useEffect(() => {
+    // When address changes, update the wallet store
     if (address) {
       setWalletAddress(address)
+    } else {
+      // Clear wallet address when disconnected
+      clearWalletAddress()
     }
-  }, [address, setWalletAddress])
+  }, [address, setWalletAddress, clearWalletAddress])
 
   return (
     <div className="flex justify-center">
