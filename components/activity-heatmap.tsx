@@ -2,12 +2,63 @@
 
 import { useEffect, useRef, useState } from "react"
 import { generateDates, getMonthLabels } from "@/lib/date-utils"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface ActivityHeatmapProps {
   data: Record<string, number>
+  isLoading?: boolean
 }
 
-export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
+export function ActivityHeatmapSkeleton() {
+  const monthLabels = getMonthLabels()
+  
+  return (
+    <div className="relative">
+      <div className="flex items-center mb-2">
+        <Skeleton className="h-4 w-20 mr-2" />
+        <div className="flex items-center gap-1">
+          <Skeleton className="w-3 h-3 rounded-sm" />
+          <Skeleton className="w-3 h-3 rounded-sm" />
+          <Skeleton className="w-3 h-3 rounded-sm" />
+          <Skeleton className="w-3 h-3 rounded-sm" />
+          <Skeleton className="w-3 h-3 rounded-sm" />
+          <Skeleton className="h-3 w-8 ml-1" />
+        </div>
+      </div>
+
+      <div className="relative overflow-x-auto pb-4">
+        <div className="flex">
+          <div className="flex flex-col h-[126px] justify-between pr-2 text-xs">
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-3 w-6" />
+          </div>
+
+          <div>
+            <div className="flex mb-1">
+              {monthLabels.map((month, i) => (
+                <Skeleton key={i} className="h-3" style={{ width: month.weeks * 18 + "px", marginRight: "2px" }} />
+              ))}
+            </div>
+
+            <Skeleton className="h-[126px] w-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function ActivityHeatmap({ data, isLoading = false }: ActivityHeatmapProps) {
+  // If loading, show the skeleton
+  if (isLoading) {
+    return <ActivityHeatmapSkeleton />
+  }
+  
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [tooltipData, setTooltipData] = useState<{ date: string; count: number; x: number; y: number } | null>(null)
 

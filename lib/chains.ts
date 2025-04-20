@@ -1,58 +1,52 @@
-export type Chain = "ethereum" | "optimism" | "base" | "arbitrum" | "bnbchain" | "sonic" | "unichain"
+export type Chain = "ethereum" | "optimism" | "base" | "arbitrum" | "bnbchain"
 
 interface ChainConfig {
   id: number
   label: string
-  alchemyNetwork: string
   explorerUrl: string
+  logoUrl: string
+  color: string
 }
 
 export const CHAIN_CONFIGS: Record<Chain, ChainConfig> = {
   ethereum: {
     id: 1,
     label: "Ethereum",
-    alchemyNetwork: "eth-mainnet",
     explorerUrl: "https://etherscan.io",
+    logoUrl: "/chain-logos/ethereum.svg",
+    color: "from-blue-500 to-blue-600"
   },
   optimism: {
     id: 10,
     label: "Optimism",
-    alchemyNetwork: "opt-mainnet",
     explorerUrl: "https://optimistic.etherscan.io",
+    logoUrl: "/chain-logos/optimism.svg",
+    color: "from-red-500 to-red-600"
   },
   base: {
     id: 8453,
     label: "Base",
-    alchemyNetwork: "base-mainnet",
     explorerUrl: "https://basescan.org",
+    logoUrl: "/chain-logos/base.svg",
+    color: "from-blue-600 to-blue-800"
   },
   arbitrum: {
     id: 42161,
     label: "Arbitrum",
-    alchemyNetwork: "arb-mainnet",
     explorerUrl: "https://arbiscan.io",
+    logoUrl: "/chain-logos/arbitrum.svg",
+    color: "from-blue-400 to-blue-500"
   },
   bnbchain: {
     id: 56,
     label: "BNB Chain",
-    alchemyNetwork: "bsc-mainnet",
     explorerUrl: "https://bscscan.com",
-  },
-  sonic: {
-    id: 64165,
-    label: "Sonic",
-    alchemyNetwork: "sonic-mainnet",
-    explorerUrl: "https://explorer.sonic.org",
-  },
-  unichain: {
-    id: 1337,
-    label: "Unichain",
-    alchemyNetwork: "unichain-mainnet",
-    explorerUrl: "https://explorer.unichain.network",
+    logoUrl: "/chain-logos/bnb.svg",
+    color: "from-yellow-500 to-yellow-600"
   },
 }
 
-export const SUPPORTED_CHAINS: Chain[] = ["ethereum", "optimism", "base", "arbitrum", "bnbchain", "sonic", "unichain"]
+export const SUPPORTED_CHAINS: Chain[] = ["ethereum", "optimism", "base", "arbitrum", "bnbchain"]
 
 export function getChainConfig(chain: Chain): ChainConfig {
   return CHAIN_CONFIGS[chain]
